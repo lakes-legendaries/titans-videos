@@ -1,0 +1,7 @@
+#!/bin/bash
+
+FNAME=blender-2.90.0-linux64
+wget https://download.blender.org/release/Blender2.90/$FNAME.tar.xz
+tar xvf $FNAME.tar.xz
+rm $FNAME.tar.xz
+mv $FNAME blender
