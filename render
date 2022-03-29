@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# get programs and locations
+BLENDER=$(pwd)/blender/blender
+SKIP_STILL=$(pwd)/skip_still.py
+VIDEO_DIR="/mnt/d/OneDrive/Titans Of Eden/videos"
+RENDER_DIR="/mnt/d/vframe"
+UPLOAD_DIR="/mnt/d/OneDrive/Titans Of Eden/website/media"
+
+# render videos
+for FILE in \
+    "Card Flip/Card Flip.blend" \
+    "Title Card/Storm Title.blend" \
+    "Title Card/Fire Title.blend" \
+    "Title Card/Ice Title.blend" \
+    "Title Card/Stone Title.blend" \
+    "Title Card/Stone Title.blend" \
+    "Title Card/Title.blend" \
+    "Title Card/Title Video.blend" \
+; do
+
+    # get output fname
+    IFNAME=$(basename "$FILE")
+    OFNAME=$RENDER_DIR/${IFNAME%.*}
+
+    # render video
+    $BLENDER -b "$VIDEO_DIR/$FILE" --render-output "$OFNAME" -a
+
+    # renumber title video
+    if [ "$IFNAME" == "Title.blend" ]; then
+        python3.9 renumber.py
+    fi
+
+    # remove numbers from video filename
+    ACTUAL_OFNAME=$(ls "$OFNAME"* | grep .mkv)
+    if [ ! -z "$ACTUAL_OFNAME" ]; then
+        TARGET_OFNAME=$(echo $ACTUAL_OFNAME | sed -E 's/[0-9]{4}-[0-9]{4}//g')
+        mv "$ACTUAL_OFNAME" "$TARGET_OFNAME"
+    fi
+done
+
+# convert to mp4, move to website directory
+for IFNAME in $RENDER_DIR/*.mkv; do
+    OFNAME=$( \
+        basename "$IFNAME" \
+        | sed 's/ /_/g' \
+        | tr '[:upper:]' '[:lower:]' \
+        | sed 's/.mkv/.mp4/g' \
+    )
+    ffmpeg -i "$IFNAME" -y -codec copy "$UPLOAD_DIR/$OFNAME"
+done
+exit 0
+
+# upload videos
+cd $UPLOAD_DIR
+./upload-mp4
+
+
+
+
+
+# animate token explosion
+$BLENDER -b "Landing/G - Temples/60-Sec Temples.blend" -a -s 630 -e 780
+
+# animate videos
+for FILE in \
+    "Landing/A - Opening/60-Sec Opening.blend" \
+    "Landing/B - Haunt/60-Sec Haunt.blend" \
+    "Landing/C - Subvert/60-Sec Subvert.blend" \
+    "Landing/E - Classic/60-Sec Classic.blend" \
+    "Landing/F - Constructed/60-Sec Constructed.blend" \
+    "Landing/G - Temples/60-Sec Temples.blend" \
+    "No-Wait/anim/No-Wait Anim.blend" \
+    "Empire/anim/Empire Anim.blend" \
+    "No-Wait/anim/No-Wait Anim.blend" \
+    "No-Wait/anim/No-Wait Anim.blend" \
+; do
+    $BLENDER -b "$FILE" -P $SKIP_STILL
+done
+
+# compile and convert videos
+for FILE in \
+    "Landing/Landing Video.blend" \
+    "No-Wait/No-Wait Video.blend" \
+    "Empire/Empire Video.blend" \
+    "Constructed/anim/Constructed Anim.blend" \
+    "Card Flip/Card Flip.blend" \
+; do
+    $BLENDER -b "$FILE" -a
+    MKV="$(echo $FILE | sed 's/.blend/.mkv/g')"
+    MP4="$( \
+        echo $FILE \
+        | sed 's/.blend/.mp4/g' \
+        | sed 's/ /_/g' \
+        | tr '[:upper:]' '[:lower:]' \
+    )"
+    echo "$a" | tr '[:upper:]' '[:lower:]'
+    ffmpeg -i "$MKV" -y -codec copy "$MP4"
+    rm "$MKV"
+    cp "$MP4" "$UPLOAD_DIR"
+done
+
+# upload files
+cd $UPLOAD_DIR
+./upload-mp4
