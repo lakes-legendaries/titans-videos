@@ -20,23 +20,22 @@ for FILE in \
     "Landing/A - Opening/60-Sec Opening.blend" \
     "Landing/B - Haunt/60-Sec Haunt.blend" \
     "Landing/C - Subvert/60-Sec Subvert.blend" \
+    "Landing/D - No Wait/60-Sec No Wait.blend" \
     "Landing/E - Classic/60-Sec Classic.blend" \
     "Landing/F - Constructed/60-Sec Constructed.blend" \
     "Landing/G - Temples/60-Sec Temples.blend" \
-    "No-Wait/anim/No-Wait Anim.blend" \
     "Empire/anim/Empire Anim.blend" \
     "No-Wait/anim/No-Wait Anim.blend" \
-    "No-Wait/anim/No-Wait Anim.blend" \
+    "Constructed/anim/Constructed Anim.blend" \
 ; do
     IFNAME=$(basename "$FILE")
     OFNAME=$RENDER_DIR/${IFNAME%.*}
     $BLENDER -b "$VIDEO_DIR/$FILE" --render-output "$OFNAME" -P skip_still.py
 done
-exit 0
 
 # render videos
 for FILE in \
-    "Card Flip/Card Flip.blend" \
+    "Card Flip.blend" \
     "Title Card/Storm Title.blend" \
     "Title Card/Fire Title.blend" \
     "Title Card/Ice Title.blend" \
@@ -45,9 +44,9 @@ for FILE in \
     "Title Card/Title.blend" \
     "Title Card/Title Video.blend" \
     "Landing/Landing Video.blend" \
-    "No-Wait/No-Wait Video.blend" \
     "Empire/Empire Video.blend" \
-    "Constructed/anim/Constructed Anim.blend" \
+    "No-Wait/No-Wait Video.blend" \
+    "Constructed/Constructed Video.blend" \
 ; do
 
     # get output fname
@@ -80,7 +79,6 @@ for IFNAME in $RENDER_DIR/*.mkv; do
     )
     ffmpeg -i "$IFNAME" -y -codec copy "$UPLOAD_DIR/$OFNAME"
 done
-exit 0
 
 # upload videos
 cd $UPLOAD_DIR
