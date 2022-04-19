@@ -11,7 +11,7 @@ Quickstart
 
 #. Requirements:
 
-   #. python3.5+
+   #. python3.7+
    #. ffmpeg
 
 #. Get blender:
@@ -20,8 +20,23 @@ Quickstart
 
       ./install-blender
 
-#. Render all:
+#. Install python requirements
+
+   .. code-block:: bash
+
+      python -m venv .venv
+      source .venv/bin/activate
+      python -m pip install --upgrade pip
+      python -m pip install -r requirements.txt
+
+#. Render videos:
 
    .. code-block:: bash
 
       ./render
+
+#. Make gifs
+
+   .. code-block:: bash
+
+      python make_gifs.py
