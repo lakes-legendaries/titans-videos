@@ -44,6 +44,8 @@ for FILE in \
     "Title Card/Title.blend" \
     "Title Card/Title Video.blend" \
     "Landing/Landing Video.blend" \
+    "Landing/Gif - Constructed.blend" \
+    "Landing/Gif - Interactive.blend" \
     "Empire/Empire Video.blend" \
     "No-Wait/No-Wait Video.blend" \
     "Constructed/Constructed Video.blend" \
@@ -81,5 +83,5 @@ for IFNAME in $RENDER_DIR/*.mkv; do
 done
 
 # upload videos
-cd $UPLOAD_DIR
+cd "$UPLOAD_DIR"
 ./upload-mp4
