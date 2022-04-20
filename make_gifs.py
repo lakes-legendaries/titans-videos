@@ -5,6 +5,8 @@ def create_gif(
     ifname: str,
     frames: list[int],
     ofname: str,
+    *,
+    loop: bool = True,
 ):
     """Create GIF
 
@@ -22,9 +24,11 @@ def create_gif(
         frames to inclue
     ofname: str
         output filename
+    loop: bool, optional, default=True
+        whether gif should loop
     """
     frames = list(frames)
-    for i in range(3):
+    for _ in range(3):
         frames.append(frames[-1])
     images = (
         Image.open(fname).convert('RGB').convert('P')
@@ -40,12 +44,29 @@ def create_gif(
         include_color_table=True,
         save_all=True,
         duration=200,
-        loop=0,
+        **({'loop': 0} if loop else {}),
     )
 
 
 if __name__ == '__main__':
-    create_gif('Empire Anim', range(2010, 3200, 15), 'empire.gif')
-    create_gif('Gif - Constructed', range(2970, 3511, 10), 'constructed.gif')
-    create_gif('Gif - Interactive', range(900, 1250, 10), 'cycle.gif')
-    create_gif('Gif - Interactive', range(1300, 2251, 10), 'interactive.gif')
+    create_gif(
+        'Empire Anim',
+        range(2010, 3200, 15),
+        'empire.gif',
+    )
+    create_gif(
+        'Gif - Constructed',
+        range(2970, 3511, 10),
+        'constructed.gif',
+    )
+    create_gif(
+        'Gif - Interactive',
+        range(900, 1250, 10),
+        'cycle.gif',
+        loop=False,
+    )
+    create_gif(
+        'Gif - Interactive',
+        range(1300, 2251, 10),
+        'interactive.gif',
+    )
