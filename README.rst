@@ -20,7 +20,7 @@ Quickstart
 
       ./install-blender
 
-#. Install python requirements
+#. Install python requirements:
 
    .. code-block:: bash
 
@@ -35,7 +35,7 @@ Quickstart
 
       ./render
 
-#. Make gifs
+#. Make gifs:
 
    .. code-block:: bash
 
