@@ -4,7 +4,7 @@
 BLENDER=$(pwd)/blender/blender
 VIDEO_DIR="/mnt/d/OneDrive/Titans Of Eden/videos"
 RENDER_DIR="/mnt/d/vframe"
-UPLOAD_DIR="/mnt/d/OneDrive/Titans Of Eden/website/media"
+export UPLOAD_DIR="/mnt/d/OneDrive/Titans Of Eden/website/vid"
 
 # animate videos directly
 for FILE in \
@@ -44,8 +44,6 @@ for FILE in \
     "Title Card/Title.blend" \
     "Title Card/Title Video.blend" \
     "Landing/Landing Video.blend" \
-    "Landing/Gif - Constructed.blend" \
-    "Landing/Gif - Interactive.blend" \
     "Empire/Empire Video.blend" \
     "No-Wait/No-Wait Video.blend" \
     "Constructed/Constructed Video.blend" \
@@ -82,6 +80,9 @@ for IFNAME in $RENDER_DIR/*.mkv; do
     ffmpeg -i "$IFNAME" -y -codec copy "$UPLOAD_DIR/$OFNAME"
 done
 
+# make short clips (former gifs)
+python3 make_clips.py
+
 # upload videos
 cd "$UPLOAD_DIR"
-./upload-mp4
+./upload

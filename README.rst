@@ -34,9 +34,3 @@ Quickstart
    .. code-block:: bash
 
       ./render
-
-#. Make gifs:
-
-   .. code-block:: bash
-
-      python make_gifs.py
