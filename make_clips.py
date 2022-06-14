@@ -10,26 +10,26 @@ os.chdir(upload_dir)
 
 # parameters for clip extraction
 params = {
-    # 'elements': {
-    #     'source': 'landing_video.mp4',
-    #     'start': '00:00:15.75',
-    #     'duration': '00:00:05.00',
-    # },
-    # 'interactive': {
-    #     'source': 'landing_video.mp4',
-    #     'start': '00:00:22.00',
-    #     'duration': '00:00:15.50',
-    # },
-    # 'nowait': {
-    #     'source': 'landing_video.mp4',
-    #     'start': '00:00:38.00',
-    #     'duration': '00:00:11.00',
-    # },
-    # 'constructed': {
-    #     'source': 'landing_video.mp4',
-    #     'start': '00:00:49.50',
-    #     'duration': '00:00:09.00',
-    # },
+    'elements': {
+        'source': 'landing_video.mp4',
+        'start': '00:00:15.75',
+        'duration': '00:00:05.00',
+    },
+    'interactive': {
+        'source': 'landing_video.mp4',
+        'start': '00:00:22.00',
+        'duration': '00:00:15.50',
+    },
+    'nowait': {
+        'source': 'landing_video.mp4',
+        'start': '00:00:38.00',
+        'duration': '00:00:11.00',
+    },
+    'constructed': {
+        'source': 'landing_video.mp4',
+        'start': '00:00:49.50',
+        'duration': '00:00:09.00',
+    },
     'empire': {
         'source': 'empire_video.mp4',
         'start': '00:01:11.50',
