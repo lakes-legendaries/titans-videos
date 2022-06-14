@@ -61,6 +61,9 @@ for FILE in \
         python3 renumber.py
     fi
 
+    # delete existing (old) video
+    rm -f "$OFNAME.mkv"
+
     # remove numbers from video filename
     ACTUAL_OFNAME=$(ls "$OFNAME"* | grep .mkv)
     if [ ! -z "$ACTUAL_OFNAME" ]; then
