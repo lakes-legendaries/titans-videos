@@ -53,6 +53,9 @@ for FILE in \
     IFNAME=$(basename "$FILE")
     OFNAME=$RENDER_DIR/${IFNAME%.*}
 
+    # delete existing (old) video
+    rm -f "$OFNAME.mkv"
+
     # render video
     $BLENDER -b "$VIDEO_DIR/$FILE" --render-output "$OFNAME" -a
 
@@ -60,9 +63,6 @@ for FILE in \
     if [ "$IFNAME" == "Title.blend" ]; then
         python3 renumber.py
     fi
-
-    # delete existing (old) video
-    rm -f "$OFNAME.mkv"
 
     # remove numbers from video filename
     ACTUAL_OFNAME=$(ls "$OFNAME"* | grep .mkv)
