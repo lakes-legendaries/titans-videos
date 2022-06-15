@@ -27,7 +27,7 @@ params = {
     },
     'constructed': {
         'source': 'landing_video.mp4',
-        'start': '00:00:49.50',
+        'start': '00:01:04.50',
         'duration': '00:00:09.00',
     },
     'empire': {
