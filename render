@@ -51,36 +51,31 @@ for FILE in \
 
     # get output fname
     IFNAME=$(basename "$FILE")
-    OFNAME=$RENDER_DIR/${IFNAME%.*}
-
-    # delete existing (old) video
-    rm -f "$OFNAME.mkv"
+    OFNAME="$RENDER_DIR/${IFNAME%.*}"
+    if [ ! -z "$(echo $FILE | grep Video)" ]; then
+        OFNAME="${OFNAME}.mkv"
+    fi 
 
     # render video
     $BLENDER -b "$VIDEO_DIR/$FILE" --render-output "$OFNAME" -a
-
-    # renumber title video
-    if [ "$IFNAME" == "Title.blend" ]; then
-        python3 renumber.py
-    fi
-
-    # remove numbers from video filename
-    ACTUAL_OFNAME=$(ls "$OFNAME"* | grep .mkv)
-    if [ ! -z "$ACTUAL_OFNAME" ]; then
-        TARGET_OFNAME=$(echo $ACTUAL_OFNAME | sed -E 's/[0-9]{4}-[0-9]{4}//g')
-        mv "$ACTUAL_OFNAME" "$TARGET_OFNAME"
-    fi
 done
 
-# convert to mp4, move to website directory
+# convert videos, move to website directory
 for IFNAME in $RENDER_DIR/*.mkv; do
-    OFNAME=$( \
+    OFNAME=$UPLOAD_DIR/$( \
         basename "$IFNAME" \
         | sed 's/ /_/g' \
+        | sed 's/-//g' \
         | tr '[:upper:]' '[:lower:]' \
-        | sed 's/.mkv/.mp4/g' \
+        | sed 's/.mkv//g' \
     )
-    ffmpeg -i "$IFNAME" -y -codec copy "$UPLOAD_DIR/$OFNAME"
+    H264="${OFNAME}".h264.mp4
+    H265="${OFNAME}".h265.mp4
+    WEBM="${OFNAME}".webm
+    ffmpeg -y -i "$IFNAME" -c:v libx264 -c:a aac "$H264"
+    ffmpeg -y -i "$H264" -c:v libx265 -vtag hvc1 "$H265"
+    ffmpeg -y -i "$H264" -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 1 -an -f null /dev/null
+    ffmpeg -y -i "$H264" -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 2 -c:a libopus "$WEBM"
 done
 
 # make short clips (former gifs)
