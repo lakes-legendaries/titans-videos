@@ -1,3 +1,6 @@
 /.venv
 /.vscode
 /blender*
+/ffmpeg2pass*
+/input.mp4
+/output.mp4

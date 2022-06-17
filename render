@@ -62,20 +62,7 @@ done
 
 # convert videos, move to website directory
 for IFNAME in $RENDER_DIR/*.mkv; do
-    OFNAME=$UPLOAD_DIR/$( \
-        basename "$IFNAME" \
-        | sed 's/ /_/g' \
-        | sed 's/-//g' \
-        | tr '[:upper:]' '[:lower:]' \
-        | sed 's/.mkv//g' \
-    )
-    H264="${OFNAME}".h264.mp4
-    H265="${OFNAME}".h265.mp4
-    WEBM="${OFNAME}".webm
-    ffmpeg -y -i "$IFNAME" -c:v libx264 -c:a aac "$H264"
-    ffmpeg -y -i "$H264" -c:v libx265 -vtag hvc1 "$H265"
-    ffmpeg -y -i "$H264" -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 1 -an -f null /dev/null
-    ffmpeg -y -i "$H264" -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 2 -c:a libopus "$WEBM"
+    ./convert "$IFNAME" "$UPLOAD_DIR"
 done
 
 # make short clips (former gifs)

@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# exit on error
+set -e
+
+# read command line
+if [ $# -ne 2 ]; then
+    echo "Usage: ./convert ifname odir"
+    exit 0
+fi
+IFNAME="$1"
+ODIR="$2"
+
+# get output filename
+OFNAME=$ODIR/$( \
+    basename "${IFNAME%.*}" \
+    | sed 's/ /_/g' \
+    | sed 's/-//g' \
+    | tr '[:upper:]' '[:lower:]' \
+)
+echo Converting $(basename "$IFNAME")
+
+# copy input file into local working directory
+cp "$IFNAME" input.mp4
+trap "rm -f input.mp4 output.mp4" EXIT KILL
+
+# set common flags and args
+COMMON="-i input.mp4 -strict -2 -y"
+
+# convert to H.264
+echo "  encoding h264.mp4"
+ffmpeg $COMMON -c:v libx264 -c:a aac output.mp4 &> /dev/null
+cp output.mp4 input.mp4  # set as new base input file
+mv output.mp4 "${OFNAME}.h264.mp4"
+
+# convert to H.265
+echo "  encoding h265.mp4"
+ffmpeg $COMMON -c:v libx265 -vtag hvc1 output.mp4 &> /dev/null
+mv output.mp4 "${OFNAME}.h265.mp4"
+
+# convert to AV1
+echo "  encoding av1.mp4"
+docker run --rm -v "$PWD:$PWD" -w "$PWD" mwader/static-ffmpeg:5.0.1-3 \
+    $COMMON -c:v libsvtav1 -preset 4 output.mp4 &> /dev/null
+docker run --rm -v "$PWD:$PWD" -w "$PWD" debian:stable-slim \
+    /bin/bash -c "chmod 777 output.mp4"
+mv output.mp4 "${OFNAME}.av1.mp4"
+
+# convert to WEBM
+echo "  encoding webm"
+ffmpeg $COMMON -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 1 -an -f null /dev/null &> /dev/null
+ffmpeg $COMMON -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 2 -c:a libopus output.mp4 &> /dev/null
+mv output.mp4 "${OFNAME}.webm"
