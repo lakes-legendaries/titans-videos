@@ -22,7 +22,7 @@ echo Converting $(basename "$IFNAME")
 
 # copy input file into local working directory
 cp "$IFNAME" input.mp4
-trap "rm -f input.mp4 output.mp4" EXIT KILL
+trap "rm -f input.mp4 output.*" EXIT KILL
 
 # set common flags and args
 COMMON="-i input.mp4 -strict -2 -y"
@@ -49,5 +49,5 @@ mv output.mp4 "${OFNAME}.av1.mp4"
 # convert to WEBM
 echo "  encoding webm"
 ffmpeg $COMMON -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 1 -an -f null /dev/null &> /dev/null
-ffmpeg $COMMON -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 2 -c:a libopus output.mp4 &> /dev/null
-mv output.mp4 "${OFNAME}.webm"
+ffmpeg $COMMON -c:v libvpx-vp9 -b:v 0 -crf 50 -pass 2 -c:a libopus output.webm &> /dev/null
+mv output.webm "${OFNAME}.vp9.webm"

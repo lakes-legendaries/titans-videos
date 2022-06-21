@@ -116,14 +116,15 @@ if __name__ == '__main__':
                 tmp_fname.append(
                     speedup(tmp_fname[-1], controls['speedup'])
                 )
-            add_pause(tmp_fname[-1], f'{name}_clip.mp4')
+            std_fname = f'{name}_clip.mp4'
+            add_pause(tmp_fname[-1], std_fname)
 
             # convert formats
             dir_path = os.path.dirname(os.path.realpath(__file__))
             run(
                 [
                     dir_path + '/' + 'convert',
-                    tmp_fname[-1],
+                    std_fname,
                     upload_dir,
                 ],
                 capture_output=True,
